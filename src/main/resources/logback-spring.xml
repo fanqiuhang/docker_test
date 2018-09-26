@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="180 seconds">
+
+
+    <springProperty scope="context" name="logLevel" source="level.root"/>
+    <springProperty scope="context" name="logPath" source="logging.path"/>
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-35(%d{HH:mm:ss.SSS} [%thread-%X{requestID}]) %highlight(%-5level) %-5L %cyan(%-40.40logger{40}) - %msg%n
+            </pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 注意下面的路径 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logPath}/test/test.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/test/test.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread-%X{requestID}] %-5level %-5L %logger - %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logPath}/test/access.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/test/access.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.jiucaitong.base.utils.AccessLogUtil" level="${logLevel}" additivity="false">
+        <appender-ref ref="ACCESS"/>
+    </logger>
+
+    <root level="${logLevel}">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="com.sun" level="debug"/>
+
+    <logger name="org.springframework" level="info"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor"
+            level="DEBUG"/>
+    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG"/>
+    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="DEBUG"/>
+    <logger name="org.springframework.aop.framework.CglibAopProxy" level="error"/>
+    <logger name="org.springframework.web.servlet.DispatcherServlet" level="DEBUG"/>
+
+    <logger name="springfox.documentation.swagger" level="info"/>
+    <logger name="springfox.documentation.spring" level="info"/>
+    <logger name="druid.sql.Statement" level="info"/>
+    <logger name="druid.sql.Connection" level="info"/>
+    <logger name="org.apache.http" level="debug"/>
+    <logger name="org.hibernate.validator.internal" level="error"/>
+    <logger name="druid.sql.ResultSet" level="info"/>
+    <logger name="org.apache.zookeeper.ClientCnxn" level="info"/>
+    <logger name="com.alibaba.dubbo.remoting.exchange.support.header.HeartBeatTask" level="info"/>
+    <logger name="com.alibaba.dubbo.remoting.exchange.support.header.HeartbeatHandler" level="info"/>
+</configuration>
